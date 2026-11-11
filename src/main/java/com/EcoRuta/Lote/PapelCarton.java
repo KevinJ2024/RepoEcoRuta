@@ -2,7 +2,7 @@ package com.EcoRuta.Lote;
 
 import com.EcoRuta.Entrega.Entrega;
 
-public class PapelCarton extends Lote implements IEtiquetar{
+public class PapelCarton extends Lote{
 
     private final double PRECIO_PAPELCARTON = 500;
     private final double PRECIO_ADICIONAL_CLASIFICADO = 100;
@@ -15,14 +15,14 @@ public class PapelCarton extends Lote implements IEtiquetar{
     }
 
     @Override
-    public String generarEtiqueta(){
-
-        return "";
-    }
-
-    @Override
     public double calcularValorLote() {
-        return 0;
+        double res = 0.0;
+        res += peso * PRECIO_PAPELCARTON;
+        if (clasificado){
+             res += peso * PRECIO_ADICIONAL_CLASIFICADO;
+        }
+
+        return res;
     }
 
     // ========== INICIO DE GETS Y SETS ========== //
@@ -34,6 +34,7 @@ public class PapelCarton extends Lote implements IEtiquetar{
     public void setClasificado(boolean clasificado) {
         this.clasificado = clasificado;
     }
+
 
 
     // ========== FIN DE GETS Y SETS ========== //

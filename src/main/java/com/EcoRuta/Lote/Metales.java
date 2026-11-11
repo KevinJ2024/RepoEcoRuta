@@ -7,21 +7,30 @@ public class Metales extends Lote implements IEtiquetar{
     private final double PRECIO_ACERO = 900;
 
     private TipoMetal tipoMetal;
+    private String etiqueta;
 
     public Metales(String codigo, String descripcion, double peso, Entrega theEntrega, TipoMetal tipoMetal) {
         super(codigo, descripcion, peso, theEntrega);
         this.tipoMetal = tipoMetal;
+        this.etiqueta = generarEtiqueta();
     }
 
     @Override
     public String generarEtiqueta(){
-
-        return "";
+        String res = "Codigo Lote: " + codigo + " Tipo de metal: " + tipoMetal;
+        return res;
     }
 
     @Override
     public double calcularValorLote() {
-        return 0;
+        double res = 0.0;
+        if (tipoMetal == TipoMetal.ACERO){
+            res += peso * PRECIO_ACERO;
+        }else{
+            res += peso * PRECIO_ALUMINIO;
+        }
+
+        return res;
     }
 
     // ========== INICIO DE GETS Y SETS ========== //
@@ -32,6 +41,14 @@ public class Metales extends Lote implements IEtiquetar{
 
     public void setTipoMetal(TipoMetal tipoMetal) {
         this.tipoMetal = tipoMetal;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
+
+    public void setEtiqueta(String etiqueta) {
+        this.etiqueta = etiqueta;
     }
 
     // ========== FIN DE GETS Y SETS ========== //

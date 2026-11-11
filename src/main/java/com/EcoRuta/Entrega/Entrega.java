@@ -58,7 +58,7 @@ public class Entrega {
             double pesoTotal = calcularPesoEntrega();
             double valorTotal = calcularPrecioEntrega();
 
-            Comprobante comprobante = new Comprobante(this.codigo, this.theAportante.id(), pesoTotal, valorTotal);
+            Comprobante comprobante = new Comprobante(this, this.theAportante.id(), pesoTotal, valorTotal);
             this.setTheComprobante(comprobante);
             res = true;
         }
@@ -111,6 +111,14 @@ public class Entrega {
     public boolean validarPesoEntero(double kilogramos){
         boolean res = false;
         if (kilogramos >= 0.0){
+            res = true;
+        }
+        return res;
+    }
+
+    public boolean validarEquiposEntero(double cantEquipos){
+        boolean res = false;
+        if (cantEquipos >= 0.0){
             res = true;
         }
         return res;
