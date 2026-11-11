@@ -5,12 +5,12 @@ import com.EcoRuta.Entrega.Entrega;
 public abstract class Lote {
     protected String codigo;
     protected String descripcion;
-    protected double peso;
+    protected int peso;
 
     //LLaves de relacion con otras clases
     protected Entrega theEntrega;
 
-    public Lote(String codigo, String descripcion, double peso, Entrega theEntrega) {
+    public Lote(String codigo, String descripcion, int peso, Entrega theEntrega) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.peso = peso;
@@ -37,11 +37,11 @@ public abstract class Lote {
         this.descripcion = descripcion;
     }
 
-    public double getPeso() {
+    public int getPeso() {
         return peso;
     }
 
-    public void setPeso(double peso) {
+    public void setPeso(int peso) {
         this.peso = peso;
     }
 

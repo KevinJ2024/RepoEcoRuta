@@ -2,7 +2,7 @@ package com.EcoRuta.Lote;
 
 import com.EcoRuta.Entrega.Entrega;
 
-public class ResElectricos extends Lote implements IEtiquetar{
+public class ResElectrico extends Lote implements IEtiquetar{
 
     private final double PRECIO_RESELECTRICOS = 1400;
     private final double PRECIO_EQUIPO_COMPLETO = 800;
@@ -10,7 +10,7 @@ public class ResElectricos extends Lote implements IEtiquetar{
     private int equiposCompletos;
     private String etiqueta;
 
-    public ResElectricos(String codigo, String descripcion, double peso, Entrega theEntrega, int equiposCompletos) {
+    public ResElectrico(String codigo, String descripcion, int peso, Entrega theEntrega, int equiposCompletos) {
         super(codigo, descripcion, peso, theEntrega);
         this.equiposCompletos = equiposCompletos;
         this.etiqueta = generarEtiqueta();

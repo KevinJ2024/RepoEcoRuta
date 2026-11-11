@@ -27,7 +27,7 @@ public class Entrega {
 
     public boolean agregarLote(Lote nuevoLote) {
         boolean res = false;
-        if (puedeAgregarLote()) {
+        if (puedeAgregarLote(nuevoLote.getCodigo())) {
             if(nuevoLote != null){
                 this.listLotes.add(nuevoLote);
                 res = true;
@@ -55,7 +55,7 @@ public class Entrega {
         boolean res = false;
 
         if (this.estadoEntrega == EstadoEntrega.ACEPTADA){
-            double pesoTotal = calcularPesoEntrega();
+            int pesoTotal = calcularPesoEntrega();
             double valorTotal = calcularPrecioEntrega();
 
             Comprobante comprobante = new Comprobante(this, this.theAportante.id(), pesoTotal, valorTotal);
@@ -68,8 +68,8 @@ public class Entrega {
 
     // ========== INICIO DE FUNCIONES AUXILIARES ========== //
 
-    private double calcularPesoEntrega(){
-        double res = 0.0;
+    private int calcularPesoEntrega(){
+        int res = 0;
 
         if(!this.listLotes.isEmpty()){
             for (Lote lote: listLotes){
@@ -100,25 +100,35 @@ public class Entrega {
 
     // ========== INICIO DE FUNCIONES DE VALIDACION ========== //
 
-    private boolean puedeAgregarLote(){
-        boolean res = false;
+    private boolean puedeAgregarLote(String codigoLote){
+        boolean res = true;
         if (this.estadoEntrega != EstadoEntrega.ACEPTADA){
+            if (!listLotes.isEmpty()){
+                for (Lote lote: listLotes){
+                    if (lote.getCodigo().equalsIgnoreCase(codigoLote)){
+                        res = false;
+                    }
+                }
+            }else{
+                res = false;
+            }
+        }else{
+            res = false;
+        }
+        return res;
+    }
+
+    public boolean validarPesoEntero(int kilogramos){
+        boolean res = false;
+        if (kilogramos >= 0){
             res = true;
         }
         return res;
     }
 
-    public boolean validarPesoEntero(double kilogramos){
+    public boolean validarEquiposEntero(int cantEquipos){
         boolean res = false;
-        if (kilogramos >= 0.0){
-            res = true;
-        }
-        return res;
-    }
-
-    public boolean validarEquiposEntero(double cantEquipos){
-        boolean res = false;
-        if (cantEquipos >= 0.0){
+        if (cantEquipos >= 0){
             res = true;
         }
         return res;

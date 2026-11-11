@@ -9,7 +9,7 @@ public class PapelCarton extends Lote{
 
     private boolean clasificado;
 
-    public PapelCarton(String codigo, String descripcion, double peso, Entrega theEntrega, boolean clasificado) {
+    public PapelCarton(String codigo, String descripcion, int peso, Entrega theEntrega, boolean clasificado) {
         super(codigo, descripcion, peso, theEntrega);
         this.clasificado = clasificado;
     }

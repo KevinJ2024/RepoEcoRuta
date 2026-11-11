@@ -1,12 +1,12 @@
 package com.EcoRuta.Entrega;
 
 import com.EcoRuta.Lote.Lote;
-import com.EcoRuta.Lote.Metales;
-import com.EcoRuta.Lote.ResElectricos;
+import com.EcoRuta.Lote.Metal;
+import com.EcoRuta.Lote.ResElectrico;
 
 import java.util.ArrayList;
 
-public record Comprobante(Entrega theEntrega, String idAportante, double pesoTotal, double valorTotal) {
+public record Comprobante(Entrega theEntrega, String idAportante, int pesoTotal, double valorTotal) {
 
     public String obtenerEtiquetas(){
         String res = "";
@@ -15,11 +15,11 @@ public record Comprobante(Entrega theEntrega, String idAportante, double pesoTot
         if(lotes != null){
             if(!lotes.isEmpty()){
                 for (Lote lote: lotes){
-                    if(lote instanceof Metales || lote instanceof ResElectricos){
-                        if (lote instanceof Metales){
-                            res += ", " + ((Metales) lote).getEtiqueta();
+                    if(lote instanceof Metal || lote instanceof ResElectrico){
+                        if (lote instanceof Metal){
+                            res += ", " + ((Metal) lote).getEtiqueta();
                         }else {
-                            res += ", " + ((ResElectricos) lote).getEtiqueta();
+                            res += ", " + ((ResElectrico) lote).getEtiqueta();
                         }
                     }
                 }

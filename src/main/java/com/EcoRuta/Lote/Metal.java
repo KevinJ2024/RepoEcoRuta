@@ -2,14 +2,14 @@ package com.EcoRuta.Lote;
 
 import com.EcoRuta.Entrega.Entrega;
 
-public class Metales extends Lote implements IEtiquetar{
+public class Metal extends Lote implements IEtiquetar{
     private final double PRECIO_ALUMINIO = 2200;
     private final double PRECIO_ACERO = 900;
 
     private TipoMetal tipoMetal;
     private String etiqueta;
 
-    public Metales(String codigo, String descripcion, double peso, Entrega theEntrega, TipoMetal tipoMetal) {
+    public Metal(String codigo, String descripcion, int peso, Entrega theEntrega, TipoMetal tipoMetal) {
         super(codigo, descripcion, peso, theEntrega);
         this.tipoMetal = tipoMetal;
         this.etiqueta = generarEtiqueta();
