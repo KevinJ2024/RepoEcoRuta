@@ -27,34 +27,32 @@ public class Entrega {
 
     public boolean agregarLote(Lote nuevoLote) {
         boolean res = false;
-        if (puedeAgregarLote(nuevoLote.getCodigo())) {
-            if(nuevoLote != null){
-                this.listLotes.add(nuevoLote);
-                res = true;
-            }
+        if (puedeAgregarLote(nuevoLote)) {
+            this.listLotes.add(nuevoLote);
+            res = true;
         }
         return res;
     }
 
-    public boolean actualizarEstadoEntrega(EstadoEntrega nuevoEstado){
+    public boolean actualizarEstadoEntrega(EstadoEntrega nuevoEstado) {
         boolean res = false;
 
-        if (nuevoEstado == EstadoEntrega.ACEPTADA){
-            if (puedePasarA(nuevoEstado)){
+        if (nuevoEstado == EstadoEntrega.ACEPTADA) {
+            if (puedePasarA(nuevoEstado)) {
                 this.setEstadoEntrega(nuevoEstado);
-                res = true;
+                res = generarComprobante();
             }
-        }else{
+        } else {
             this.setEstadoEntrega(nuevoEstado);
         }
 
         return res;
     }
 
-    public boolean generarComprobante(){
+    public boolean generarComprobante() {
         boolean res = false;
 
-        if (this.estadoEntrega == EstadoEntrega.ACEPTADA){
+        if (this.estadoEntrega == EstadoEntrega.ACEPTADA) {
             int pesoTotal = calcularPesoEntrega();
             double valorTotal = calcularPrecioEntrega();
 
@@ -68,12 +66,12 @@ public class Entrega {
 
     // ========== INICIO DE FUNCIONES AUXILIARES ========== //
 
-    private int calcularPesoEntrega(){
+    private int calcularPesoEntrega() {
         int res = 0;
 
-        if(!this.listLotes.isEmpty()){
-            for (Lote lote: listLotes){
-                if (lote != null){
+        if (!this.listLotes.isEmpty()) {
+            for (Lote lote : listLotes) {
+                if (lote != null) {
                     res += lote.getPeso();
                 }
             }
@@ -82,12 +80,12 @@ public class Entrega {
         return res;
     }
 
-    private double calcularPrecioEntrega(){
+    private double calcularPrecioEntrega() {
         double res = 0.0;
 
-        if(!this.listLotes.isEmpty()){
-            for (Lote lote: listLotes){
-                if (lote != null){
+        if (!this.listLotes.isEmpty()) {
+            for (Lote lote : listLotes) {
+                if (lote != null) {
                     res += lote.calcularValorLote();
                 }
             }
@@ -100,49 +98,51 @@ public class Entrega {
 
     // ========== INICIO DE FUNCIONES DE VALIDACION ========== //
 
-    private boolean puedeAgregarLote(String codigoLote){
+    private boolean puedeAgregarLote(Lote lote) {
         boolean res = true;
-        if (this.estadoEntrega != EstadoEntrega.ACEPTADA){
-            if (!listLotes.isEmpty()){
-                for (Lote lote: listLotes){
-                    if (lote.getCodigo().equalsIgnoreCase(codigoLote)){
-                        res = false;
-                    }
-                }
-            }else{
+        if (estadoEntrega != EstadoEntrega.ACEPTADA) {
+
+            if (!validarPesoEntero(lote.getPeso())) {
                 res = false;
             }
-        }else{
+            for (Lote i : listLotes) {
+                if (i.getCodigo().equalsIgnoreCase(lote.getCodigo())) {
+                    res = false;
+                    break;
+                }
+            }
+
+        } else {
             res = false;
         }
         return res;
     }
 
-    public boolean validarPesoEntero(int kilogramos){
+    public boolean validarPesoEntero(int kilogramos) {
         boolean res = false;
-        if (kilogramos >= 0){
+        if (kilogramos > 0) {
             res = true;
         }
         return res;
     }
 
-    public boolean validarEquiposEntero(int cantEquipos){
+    public boolean validarEquiposEntero(int cantEquipos) {
         boolean res = false;
-        if (cantEquipos >= 0){
+        if (cantEquipos >= 0) {
             res = true;
         }
         return res;
     }
 
-    private boolean puedePasarA(EstadoEntrega nuevoEstado){
+    private boolean puedePasarA(EstadoEntrega nuevoEstado) {
         boolean res = false;
 
-        if (this.codigo != null){
-            if(nuevoEstado == EstadoEntrega.ACEPTADA){
-                if(this.estadoEntrega != EstadoEntrega.ACEPTADA && !this.listLotes.isEmpty()){
+        if (this.codigo != null) {
+            if (nuevoEstado == EstadoEntrega.ACEPTADA) {
+                if (this.estadoEntrega != EstadoEntrega.ACEPTADA && !this.listLotes.isEmpty()) {
                     res = true;
                 }
-            }else{
+            } else {
                 res = true;
             }
         }
