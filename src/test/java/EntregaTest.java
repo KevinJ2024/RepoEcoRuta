@@ -168,7 +168,7 @@ public class EntregaTest {
     // Debe quedar en estado ABIERTA, sin lotes y sin comprobante.
     Entrega entregaInicialReal = buscarEntregaGlobal(empresaMock, codigoMock);
 
-    assertEquals(entregaInicialReal.getEstadoEntrega(), EstadoEntrega.ABIERTA);
+    assertEquals(EstadoEntrega.ABIERTA, entregaInicialReal.getEstadoEntrega());
     assertEquals(0, entregaInicialReal.getListLotes().size());
     assertEquals(false, entregaInicialReal.generarComprobante());
 
