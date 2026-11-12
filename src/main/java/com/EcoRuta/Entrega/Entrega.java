@@ -6,202 +6,191 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Entrega {
-    private String codigo;
-    private LocalDate fecha;
-    private EstadoEntrega estadoEntrega;
+  private String codigo;
+  private LocalDate fecha;
+  private EstadoEntrega estadoEntrega;
 
-    // LLaves de relacion con otras clases
-    private Aportante theAportante;
-    private Comprobante theComprobante;
-    private ArrayList<Lote> listLotes;
+  // LLaves de relacion con otras clases
+  private Aportante theAportante;
+  private Comprobante theComprobante;
+  private ArrayList<Lote> listLotes;
 
-    public Entrega(String codigo, LocalDate fecha, EstadoEntrega estadoEntrega, Aportante theAportante) {
-        this.codigo = codigo;
-        this.fecha = fecha;
-        this.estadoEntrega = estadoEntrega;
-        this.theAportante = theAportante;
+  public Entrega(String codigo, LocalDate fecha, EstadoEntrega estadoEntrega, Aportante theAportante) {
+    this.codigo = codigo;
+    this.fecha = fecha;
+    this.estadoEntrega = estadoEntrega;
+    this.theAportante = theAportante;
 
-        this.theComprobante = null;
-        this.listLotes = new ArrayList<Lote>();
+    this.theComprobante = null;
+    this.listLotes = new ArrayList<Lote>();
+  }
+
+  public boolean agregarLote(Lote nuevoLote) {
+    boolean res = false;
+    if (nuevoLote != null) {
+      if (validarPesoEntero(nuevoLote.getPeso()) && puedeAgregarLote(nuevoLote.getCodigo())) {
+        this.listLotes.add(nuevoLote);
+        res = true;
+      }
+    }
+    return res;
+  }
+
+  public boolean actualizarEstadoEntrega(EstadoEntrega nuevoEstado) {
+    boolean res = false;
+
+    if (puedePasarA(nuevoEstado)) {
+      this.setEstadoEntrega(nuevoEstado);
+      res = generarComprobante();
     }
 
-    public boolean agregarLote(Lote nuevoLote) {
-        boolean res = false;
-        if (puedeAgregarLote(nuevoLote)) {
-            this.listLotes.add(nuevoLote);
-            res = true;
+    return res;
+  }
+
+  public boolean generarComprobante() {
+    boolean res = false;
+
+    if (this.estadoEntrega == EstadoEntrega.ACEPTADA && this.theComprobante == null) {
+      int pesoTotal = calcularPesoEntrega();
+      double valorTotal = calcularPrecioEntrega();
+
+      Comprobante comprobante = new Comprobante(this, this.theAportante.id(), pesoTotal, valorTotal);
+      this.setTheComprobante(comprobante);
+      res = true;
+    }
+
+    return res;
+  }
+
+  // ========== INICIO DE FUNCIONES AUXILIARES ========== //
+
+  private int calcularPesoEntrega() {
+    int res = 0;
+
+    if (!this.listLotes.isEmpty()) {
+      for (Lote lote : listLotes) {
+        if (lote != null) {
+          res += lote.getPeso();
         }
-        return res;
+      }
     }
 
-    public boolean actualizarEstadoEntrega(EstadoEntrega nuevoEstado) {
-        boolean res = false;
+    return res;
+  }
 
-        if (nuevoEstado == EstadoEntrega.ACEPTADA) {
-            if (puedePasarA(nuevoEstado)) {
-                this.setEstadoEntrega(nuevoEstado);
-                res = generarComprobante();
-            }
-        } else {
-            this.setEstadoEntrega(nuevoEstado);
+  private double calcularPrecioEntrega() {
+    double res = 0.0;
+
+    if (!this.listLotes.isEmpty()) {
+      for (Lote lote : listLotes) {
+        if (lote != null) {
+          res += lote.calcularValorLote();
         }
-
-        return res;
+      }
     }
 
-    public boolean generarComprobante() {
-        boolean res = false;
+    return res;
+  }
 
-        if (this.estadoEntrega == EstadoEntrega.ACEPTADA) {
-            int pesoTotal = calcularPesoEntrega();
-            double valorTotal = calcularPrecioEntrega();
+  // ========== FIN DE FUNCIONES AUXILIARES ========== //
 
-            Comprobante comprobante = new Comprobante(this, this.theAportante.id(), pesoTotal, valorTotal);
-            this.setTheComprobante(comprobante);
-            res = true;
-        }
+  // ========== INICIO DE FUNCIONES DE VALIDACION ========== //
 
-        return res;
-    }
-
-    // ========== INICIO DE FUNCIONES AUXILIARES ========== //
-
-    private int calcularPesoEntrega() {
-        int res = 0;
-
-        if (!this.listLotes.isEmpty()) {
-            for (Lote lote : listLotes) {
-                if (lote != null) {
-                    res += lote.getPeso();
-                }
-            }
-        }
-
-        return res;
-    }
-
-    private double calcularPrecioEntrega() {
-        double res = 0.0;
-
-        if (!this.listLotes.isEmpty()) {
-            for (Lote lote : listLotes) {
-                if (lote != null) {
-                    res += lote.calcularValorLote();
-                }
-            }
-        }
-
-        return res;
-    }
-
-    // ========== FIN DE FUNCIONES AUXILIARES ========== //
-
-    // ========== INICIO DE FUNCIONES DE VALIDACION ========== //
-
-    private boolean puedeAgregarLote(Lote lote) {
-        boolean res = true;
-        if (estadoEntrega != EstadoEntrega.ACEPTADA) {
-
-            if (!validarPesoEntero(lote.getPeso())) {
-                res = false;
-            }
-            for (Lote i : listLotes) {
-                if (i.getCodigo().equalsIgnoreCase(lote.getCodigo())) {
-                    res = false;
-                    break;
-                }
-            }
-
-        } else {
+  private boolean puedeAgregarLote(String codigoLote) {
+    boolean res = true;
+    if (this.estadoEntrega != EstadoEntrega.ACEPTADA) {
+      if (!listLotes.isEmpty()) {
+        for (Lote lote : listLotes) {
+          if (lote.getCodigo().equalsIgnoreCase(codigoLote)) {
             res = false;
+          }
         }
-        return res;
+      }
+    } else {
+      res = false;
+    }
+    return res;
+  }
+
+  public boolean validarPesoEntero(int kilogramos) {
+    boolean res = false;
+    if (kilogramos > 0) {
+      res = true;
+    }
+    return res;
+  }
+
+  public boolean validarEquiposEntero(int cantEquipos) {
+    boolean res = false;
+    if (cantEquipos >= 0) {
+      res = true;
+    }
+    return res;
+  }
+
+  private boolean puedePasarA(EstadoEntrega nuevoEstado) {
+    boolean res = false;
+
+    if (this.codigo != null && nuevoEstado == EstadoEntrega.ACEPTADA) {
+      if (this.estadoEntrega == EstadoEntrega.ABIERTA && !this.listLotes.isEmpty()) {
+        res = true;
+      }
     }
 
-    public boolean validarPesoEntero(int kilogramos) {
-        boolean res = false;
-        if (kilogramos > 0) {
-            res = true;
-        }
-        return res;
-    }
+    return res;
+  }
 
-    public boolean validarEquiposEntero(int cantEquipos) {
-        boolean res = false;
-        if (cantEquipos >= 0) {
-            res = true;
-        }
-        return res;
-    }
+  // ========== FIN DE FUNCIONES DE VALIDACION ========== //
 
-    private boolean puedePasarA(EstadoEntrega nuevoEstado) {
-        boolean res = false;
+  // ========== INICIO DE GETS Y SETS ========== //
 
-        if (this.codigo != null) {
-            if (nuevoEstado == EstadoEntrega.ACEPTADA) {
-                if (this.estadoEntrega != EstadoEntrega.ACEPTADA && !this.listLotes.isEmpty()) {
-                    res = true;
-                }
-            } else {
-                res = true;
-            }
-        }
+  public String getCodigo() {
+    return codigo;
+  }
 
-        return res;
-    }
+  public void setCodigo(String codigo) {
+    this.codigo = codigo;
+  }
 
-    // ========== FIN DE FUNCIONES DE VALIDACION ========== //
+  public LocalDate getFecha() {
+    return fecha;
+  }
 
-    // ========== INICIO DE GETS Y SETS ========== //
+  public void setFecha(LocalDate fecha) {
+    this.fecha = fecha;
+  }
 
-    public String getCodigo() {
-        return codigo;
-    }
+  public EstadoEntrega getEstadoEntrega() {
+    return estadoEntrega;
+  }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+  public void setEstadoEntrega(EstadoEntrega estadoEntrega) {
+    this.estadoEntrega = estadoEntrega;
+  }
 
-    public LocalDate getFecha() {
-        return fecha;
-    }
+  public Aportante getTheAportante() {
+    return theAportante;
+  }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
+  public void setTheAportante(Aportante theAportante) {
+    this.theAportante = theAportante;
+  }
 
-    public EstadoEntrega getEstadoEntrega() {
-        return estadoEntrega;
-    }
+  public Comprobante getTheComprobante() {
+    return theComprobante;
+  }
 
-    public void setEstadoEntrega(EstadoEntrega estadoEntrega) {
-        this.estadoEntrega = estadoEntrega;
-    }
+  public void setTheComprobante(Comprobante theComprobante) {
+    this.theComprobante = theComprobante;
+  }
 
-    public Aportante getTheAportante() {
-        return theAportante;
-    }
+  public ArrayList<Lote> getListLotes() {
+    return listLotes;
+  }
 
-    public void setTheAportante(Aportante theAportante) {
-        this.theAportante = theAportante;
-    }
+  public void setListLotes(ArrayList<Lote> listLotes) {
+    this.listLotes = listLotes;
+  }
 
-    public Comprobante getTheComprobante() {
-        return theComprobante;
-    }
-
-    public void setTheComprobante(Comprobante theComprobante) {
-        this.theComprobante = theComprobante;
-    }
-
-    public ArrayList<Lote> getListLotes() {
-        return listLotes;
-    }
-
-    public void setListLotes(ArrayList<Lote> listLotes) {
-        this.listLotes = listLotes;
-    }
-
-
-    // ========== FIN DE GETS Y SETS ========== //
+  // ========== FIN DE GETS Y SETS ========== //
 }

@@ -7,77 +7,77 @@ import com.EcoRuta.Entrega.EstadoEntrega;
 import java.util.ArrayList;
 
 public class Empresa {
-    private String nit;
-    private String nombre;
+  private String nit;
+  private String nombre;
 
-    private ArrayList<Aportante> listAportantes;
+  private ArrayList<Aportante> listAportantes;
 
-    public Empresa(String nit, String nombre) {
-        this.nit = nit;
-        this.nombre = nombre;
-        this.listAportantes = new ArrayList<Aportante>();
-    }
+  public Empresa(String nit, String nombre) {
+    this.nit = nit;
+    this.nombre = nombre;
+    this.listAportantes = new ArrayList<Aportante>();
+  }
 
-    public Aportante consultarAportante(String idAportante){
-        Aportante res = null;
+  public Aportante consultarAportante(String idAportante) {
+    Aportante res = null;
 
-        if (!idAportante.isEmpty()){
-            if (!listAportantes.isEmpty()){
-                for (Aportante aportante: listAportantes){
-                    if (aportante.id().equalsIgnoreCase(idAportante)){
-                        res = aportante;
-                        break;
-                    }
-                }
-            }
+    if (!idAportante.isEmpty()) {
+      if (!listAportantes.isEmpty()) {
+        for (Aportante aportante : listAportantes) {
+          if (aportante.id().equalsIgnoreCase(idAportante)) {
+            res = aportante;
+            break;
+          }
         }
-
-        return res;
+      }
     }
 
-    public double consultarAcumuladoAportante(String idAportante){
-        double res = 0.0;
+    return res;
+  }
 
-        Aportante aportanteEncontrado = consultarAportante(idAportante);
+  public double consultarAcumuladoAportante(String idAportante) {
+    double res = 0.0;
 
-        if (aportanteEncontrado != null){
-            ArrayList<Entrega> listEntregas = aportanteEncontrado.listEntregas();
-            if (!listEntregas.isEmpty()){
-                for (Entrega entrega: listEntregas){
-                    if (entrega.getEstadoEntrega() == EstadoEntrega.ACEPTADA){
-                        res += entrega.getTheComprobante().valorTotal();
-                    }
-                }
-            }
+    Aportante aportanteEncontrado = consultarAportante(idAportante);
+
+    if (aportanteEncontrado != null) {
+      ArrayList<Entrega> listEntregas = aportanteEncontrado.listEntregas();
+      if (!listEntregas.isEmpty()) {
+        for (Entrega entrega : listEntregas) {
+          if (entrega.getEstadoEntrega() == EstadoEntrega.ACEPTADA) {
+            res += entrega.getTheComprobante().valorTotal();
+          }
         }
-        return res;
+      }
     }
+    return res;
+  }
 
-    // ========== INICIO DE GETS Y SETS ========== //
+  // ========== INICIO DE GETS Y SETS ========== //
 
-    public String getNit() {
-        return nit;
-    }
+  public String getNit() {
+    return nit;
+  }
 
-    public void setNit(String nit) {
-        this.nit = nit;
-    }
+  public void setNit(String nit) {
+    this.nit = nit;
+  }
 
-    public String getNombre() {
-        return nombre;
-    }
+  public String getNombre() {
+    return nombre;
+  }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-    public ArrayList<Aportante> getListAportantes() {
-        return listAportantes;
-    }
+  public ArrayList<Aportante> getListAportantes() {
+    return listAportantes;
+  }
 
-    public void setListAportantes(ArrayList<Aportante> listAportantes) {
-        this.listAportantes = listAportantes;
-    }
+  public void setListAportantes(ArrayList<Aportante> listAportantes) {
+    this.listAportantes = listAportantes;
+  }
 
-    // ========== FIN DE GETS Y SETS ========== //
+  // ========== FIN DE GETS Y SETS ========== //
 }
