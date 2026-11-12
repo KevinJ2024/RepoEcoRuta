@@ -73,7 +73,7 @@ public class ComprobanteTest {
         assertFalse(etiquetas.contains("L01"), "No debe generar etiqueta para PapelCarton");
 
         // 4. Verificar que aparezcan exactamente dos etiquetas
-        String[] listaEtiquetas = etiquetas.replaceFirst("^,\\s*", "").split(",\\s*");
+        String[] listaEtiquetas = etiquetas.split(", ");
         assertEquals(2, listaEtiquetas.length, "Deben aparecer exactamente dos etiquetas");
     }
 
