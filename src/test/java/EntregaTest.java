@@ -198,6 +198,11 @@ public class EntregaTest {
     // asociada a un aportante vinculado a la misma. Por lo tanto se rechaza un
     // registro de una entrega asociada a un aportante no vinculado a la empresa.
     assertEquals(null, buscarEntregaGlobal(empresaMock, codigoNoRepetidoMock));
+
+    // la entrega inicial debe continuar igual
+    assertEquals(EstadoEntrega.ABIERTA, entregaInicialReal.getEstadoEntrega());
+    assertEquals(0, entregaInicialReal.getListLotes().size());
+    assertEquals(false, entregaInicialReal.generarComprobante());
   }
 
   // Métodos auiliares
